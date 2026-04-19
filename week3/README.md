@@ -22,3 +22,37 @@ Each process is given a rank number (my_rank). This is basically its ID. The tot
 ### check_task()
 This function decides what each process does based on its rank. If the rank is 0, it acts as the root and receives data from the other processes. If the rank is greater than 0, it acts as a worker and sends its result to the root.
 
+# Vector Serial vs MPI Benchmark Results
+
+## Serial Implementation
+
+| Input Size | Output | Real Time (s) | User Time (s) | Sys Time (s) |
+|------------|--------|--------------|---------------|--------------|
+| 1,000      | 500500        | 0.005 | 0.000 | 0.004 |
+| 10,000     | 50005000      | 0.004 | 0.000 | 0.004 |
+| 100,000    | 705082704     | 0.006 | 0.003 | 0.003 |
+| 1,000,000  | 1784293664    | 0.019 | 0.015 | 0.004 |
+
+## MPI Implementation (np = 2)
+
+| Input Size | Output | Real Time (s) | User Time (s) | Sys Time (s) |
+|------------|--------|--------------|---------------|--------------|
+| 10,000     | 50005000      | 0.411 | 0.078 | 0.108 |
+| 100,000    | 705082704     | 0.411 | 0.084 | 0.099 |
+| 1,000,000  | 1784293664    | 0.420 | 0.076 | 0.128 |
+
+## MPI Implementation (np = 4)
+
+| Input Size | Output | Real Time (s) | User Time (s) | Sys Time (s) |
+|------------|--------|--------------|---------------|--------------|
+| 10,000     | 50005000      | 0.416 | 0.132 | 0.159 |
+| 100,000    | 705082704     | 0.421 | 0.091 | 0.194 |
+| 1,000,000  | 1784293664    | 0.455 | 0.139 | 0.193 |
+
+## MPI Implementation (np = 8)
+
+| Input Size | Output | Real Time (s) | User Time (s) | Sys Time (s) |
+|------------|--------|--------------|---------------|--------------|
+| 10,000     | 50005000      | 0.443 | 0.230 | 0.244 |
+| 100,000    | 705082704     | 0.434 | 0.207 | 0.291 |
+| 1,000,000  | 1784293664    | 0.446 | 0.312 | 0.257 |
