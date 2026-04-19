@@ -52,3 +52,14 @@ Overall, these results demonstrate the impact of language implementation (compil
 | 1,000   | 0.000033 | 0.000048 | 0.000315 | 0.0000989 |
 | 10,000  | 0.000432 | 0.000471 | 0.001549 | 0.000396 |
 | 50,000  | 0.001980 | 0.001765 | 0.006994 | 0.002182 |
+
+## Overall Conclusions
+
+Across all experiments, C consistently outperforms Python in both computation and file I/O tasks. This is due to C being a compiled language with lower runtime overhead, while Python is interpreted and incurs additional processing costs.
+
+The repeat adder experiments show that execution time scales with input size, but Python has consistently higher overhead even for simple arithmetic operations.
+
+The internal timing experiments provide a clearer view of computational scaling by isolating core execution time, removing external system overhead.
+
+File I/O experiments demonstrate that disk operations significantly increase runtime compared to pure computation. Writing is generally slower than reading, and Python exhibits higher overhead in both cases.
+
