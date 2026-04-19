@@ -20,3 +20,27 @@
 | 100 × 3        | 300    | 0.030        | 0.017        | 0.013       |
 | 1000 × 3       | 3000   | 0.028        | 0.020        | 0.008       |
 | 10000 × 3      | 30000  | 0.028        | 0.016        | 0.012       |
+
+Overall, these results demonstrate the impact of language implementation (compiled vs interpreted) on execution performance.
+
+## Internal Timing (time_print)
+
+### C Implementation
+
+| Input | Runtime (s) |
+|------|------------|
+| 10       | 0.000162 |
+| 100      | 0.000183 |
+| 1000     | 0.000423 |
+| 10000    | 0.001935 |
+| 100000   | 0.021019 |
+
+### Python Implementation
+
+| Input | Runtime (s) |
+|------|------------|
+| 10       | 0.00001335 |
+| 100      | 0.00001335 |
+| 1000     | 0.00055146 |
+| 10000    | 0.00726223 |
+| 100000   | 0.07441783 |
