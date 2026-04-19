@@ -8,6 +8,8 @@
 | MPI      | 8        | 0.444        | 0.211        | 0.295       |
 | MPI      | 16       | 0.474        | 0.321        | 0.547       |
 
+MPI execution time increases slightly with number of processes due to communication and process startup overhead. No speedup is observed because the workload is too small.
+
 ## proof.c explanation
 
 ### main()
@@ -56,3 +58,5 @@ This function decides what each process does based on its rank. If the rank is 0
 | 10,000     | 50005000      | 0.443 | 0.230 | 0.244 |
 | 100,000    | 705082704     | 0.434 | 0.207 | 0.291 |
 | 1,000,000  | 1784293664    | 0.446 | 0.312 | 0.257 |
+
+The serial version is faster for small inputs due to lack of communication overhead. MPI only becomes beneficial for much larger workloads where computation dominates communication.
