@@ -41,3 +41,30 @@ sys     0m0.174s
 The results show that execution time is very short and remains relatively consistent across runs. Some variation is expected due to process scheduling and MPI communication overhead.
 
 This demonstrates that MPI communication for small messages is fast, but timing measurements at this scale can vary slightly between runs.
+
+## MPI Ping-Pong Results
+
+| Pings | Elapsed Time (s) | Average Time per Ping (s) |
+|------|------------------|---------------------------|
+| 100  | 0.000226         | 0.000002                  |
+| 1000 | 0.001144         | 0.000001                  |
+| 10000| 0.008676         | 0.000001                  |
+| 10000| 0.007672         | 0.000001                  |
+
+## MPI Bandwidth Results
+
+| Array Size (ints) | Elapsed Time (s) | Avg Time per Ping (s) |
+|------------------|------------------|------------------------|
+| 1                | 0.001017         | 0.000001               |
+| 100              | 0.001634         | 0.000002               |
+| 10000            | 0.020842         | 0.000021               |
+| 100000           | 0.108329         | 0.000108               |
+| 1000000          | 0.963248         | 0.000963               |
+
+The bandwidth test was carried out by sending arrays of different sizes between two MPI processes.
+
+The results show that as the size of the array increases, the communication time also increases. This is expected because larger messages take longer to transfer between processes.
+
+For very small message sizes, the time is dominated by latency (fixed communication cost). As the message size grows, the effect of bandwidth becomes more significant, leading to a noticeable increase in communication time.
+
+![MPI Bandwidth Graph](plots/bandwidth_graph.png)
