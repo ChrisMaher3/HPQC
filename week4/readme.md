@@ -76,3 +76,15 @@ For very small message sizes, the time is dominated by latency (fixed communicat
 | DIY      | 100000    | 0.444         | 0.126         | 0.165        |
 | Bcast    | 100000    | 0.445         | 0.144         | 0.159        |
 | Scatter  | 100000    | 0.424         | 0.151         | 0.125        |
+
+## Send/Recv vs Gather vs Reduce Benchmark
+
+| Method   | Input Size | Real Time (s) | User Time (s) | Sys Time (s) |
+|----------|-----------|---------------|---------------|--------------|
+| DIY      | 100000    | 0.415         | 0.123         | 0.162        |
+| Gather   | 100000    | 0.434         | 0.113         | 0.173        |
+| Reduce   | 100000    | 0.432         | 0.150         | 0.143        |
+
+The results show that all three methods perform similarly for this problem size. The DIY (manual send/receive) approach is slightly faster in this case, while MPI_Gather and MPI_Reduce show similar performance.
+
+This is expected because the workload is relatively small, meaning communication overhead dominates and reduces the advantage of optimized collective operations.
