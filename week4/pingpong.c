@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <mpi.h>
 #include <stdlib.h>
+#include <mpi.h>
 
 int main(int argc, char **argv)
 {
@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     if (size != 2)
     {
         if (rank == 0)
-            printf("Run with exactly 2 processes\n");
+            printf("Run with 2 processes only\n");
         MPI_Finalize();
         return 0;
     }
@@ -35,22 +35,32 @@ int main(int argc, char **argv)
 
     start = MPI_Wtime();
 
-    while (counter < num_pings)
+    while (1)
     {
         if (rank == 0)
         {
+            if (counter >= num_pings)
+            {
+                int stop = -1;
+                MPI_Send(&stop, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+                break;
+            }
+
             MPI_Send(&counter, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
             MPI_Recv(&value, 1, MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            counter++;
         }
         else
         {
             MPI_Recv(&value, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            if (value < 0)
+                break;
+
             value++;
             MPI_Send(&value, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
         }
-
-        if (rank == 0)
-            counter++;
     }
 
     end = MPI_Wtime();
