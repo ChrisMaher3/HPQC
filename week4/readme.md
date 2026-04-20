@@ -67,4 +67,4 @@ The results show that as the size of the array increases, the communication time
 
 For very small message sizes, the time is dominated by latency (fixed communication cost). As the message size grows, the effect of bandwidth becomes more significant, leading to a noticeable increase in communication time.
 
-![Bandwidth Graph](plots/bandwidth_graph.png)
+![Bandwidth Graph](Graphs/bandwidth_graph.png)
