@@ -21,3 +21,12 @@ The string is updated over a number of time steps, where each point depends on i
 ## Aggregation Strategy
 
 It is not safe for multiple MPI processes to write to the same file at the same time, so the results need to be combined in a controlled way. The approach is to have each process compute its own part of the simulation, and then gather the results back to the root process. The root process is then responsible for writing everything to the output file. This can be done using MPI_Gather or MPI_Reduce depending on the type of data. For this program, gathering the full array to the root process is the most straightforward approach, and avoids file conflicts between processes. This method is also consistent with previous benchmarking work, where the root process handles output after all parallel computation is complete.
+
+## Implementation
+
+The serial string simulation was modified to run in parallel using MPI. The array was split across processes using MPI_Scatter. Each process updates its local section of the string. After each time step, the results are gathered back to the root process using MPI_Gather. The root process handles writing the output to file to avoid conflicts between processes.
+
+## Part 3: Model Improvement
+
+The update_positions function was modified to improve the model. Originally, each point copied the value of the previous point, which is not very realistic. The updated version uses the average of neighbouring points to calculate the new position. This produces a smoother wave and better represents how a real string behaves.
+A fixed boundary condition was also added at the end of the string.

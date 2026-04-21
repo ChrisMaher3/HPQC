@@ -26,29 +26,26 @@ int main(int argc, char **argv)
 
     int local_points = points / size;
 
-    double *time_stamps = NULL;
     double *positions = NULL;
     double *local_positions = malloc(local_points * sizeof(double));
-    double *recv_positions = NULL;
 
     if (rank == 0)
     {
-        time_stamps = malloc(time_steps * sizeof(double));
         positions = malloc(points * sizeof(double));
-
-        initialise_vector(time_stamps, time_steps, 0.0);
-
-        for (int i = 0; i < time_steps; i++)
-        {
-            time_stamps[i] = i * step_size;
-        }
-
         initialise_vector(positions, points, 0.0);
     }
 
     MPI_Scatter(positions, local_points, MPI_DOUBLE,
                 local_positions, local_points, MPI_DOUBLE,
                 0, MPI_COMM_WORLD);
+
+    FILE *out_file = NULL;
+
+    if (rank == 0)
+    {
+        out_file = fopen("data/string_wave.csv", "w");
+        print_header(&out_file, points);
+    }
 
     for (int t = 0; t < time_steps; t++)
     {
@@ -62,11 +59,6 @@ int main(int argc, char **argv)
 
         if (rank == 0)
         {
-            FILE* out_file = fopen("data/string_wave.csv", "a");
-
-            if (t == 0)
-                print_header(&out_file, points);
-
             fprintf(out_file, "%d, %lf", t, time);
 
             for (int i = 0; i < points; i++)
@@ -75,18 +67,72 @@ int main(int argc, char **argv)
             }
 
             fprintf(out_file, "\n");
-            fclose(out_file);
         }
+    }
+
+    if (rank == 0)
+    {
+        fclose(out_file);
+        free(positions);
     }
 
     free(local_positions);
 
-    if (rank == 0)
-    {
-        free(time_stamps);
-        free(positions);
-    }
-
     MPI_Finalize();
     return 0;
+}
+
+void update_positions(double* positions, int points, double time)
+{
+    double* new_positions = malloc(points * sizeof(double));
+
+    new_positions[0] = driver(time);
+
+    for (int i = 1; i < points - 1; i++)
+    {
+        new_positions[i] = 0.5 * (positions[i - 1] + positions[i + 1]);
+    }
+
+    new_positions[points - 1] = 0.0;
+
+    for (int i = 0; i < points; i++)
+    {
+        positions[i] = new_positions[i];
+    }
+
+    free(new_positions);
+}
+
+double driver(double time)
+{
+    return sin(time * 2.0 * M_PI);
+}
+
+void initialise_vector(double vector[], int size, double initial)
+{
+    for (int i = 0; i < size; i++)
+    {
+        vector[i] = initial;
+    }
+}
+
+void print_header(FILE** p_out_file, int points)
+{
+    fprintf(*p_out_file, "#, time");
+    for (int j = 0; j < points; j++)
+    {
+        fprintf(*p_out_file, ", y[%d]", j);
+    }
+    fprintf(*p_out_file, "\n");
+}
+
+int check_args(int argc, char **argv)
+{
+    if (argc != 2)
+    {
+        fprintf(stderr, "Usage: %s [POINTS]\n", argv[0]);
+        exit(-1);
+    }
+
+    return atoi(argv[1]);
 }
